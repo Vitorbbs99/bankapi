@@ -1,7 +1,7 @@
 package com.bankapp.bankapi.infrastructure.controller;
 
 import com.bankapp.bankapi.domain.entity.Usuario;
-import com.bankapp.bankapi.domain.model.Pagina;
+import com.bankapp.bankapi.domain.model.Paginacao;
 import com.bankapp.bankapi.domain.ports.inbound.UsuarioUseCase;
 import com.bankapp.bankapi.infrastructure.adapters.inbound.dto.DepositoRequestDTO;
 import com.bankapp.bankapi.infrastructure.adapters.inbound.dto.UsuarioRequestDTO;
@@ -51,17 +51,17 @@ public class UsuarioController {
   }
 
   @GetMapping
-  public ResponseEntity<Pagina<UsuarioResponseDTO>> listarUsuarios(
+  public ResponseEntity<Paginacao<UsuarioResponseDTO>> listarUsuarios(
     @RequestParam(defaultValue = "0") int page,
     @RequestParam(defaultValue = "20") int size
   ) {
-    Pagina<Usuario> paginaUsuarios = usuarioUseCase.listarUsuarios(page, size);
+    Paginacao<Usuario> paginaUsuarios = usuarioUseCase.listarUsuarios(page, size);
 
     List<UsuarioResponseDTO> responseDTOS = paginaUsuarios.conteudo().stream()
       .map(UsuarioResponseDTO::doDominio)
       .toList();
 
-    return ResponseEntity.ok(new Pagina<>(responseDTOS, paginaUsuarios.pagina(),
+    return ResponseEntity.ok(new Paginacao<>(responseDTOS, paginaUsuarios.pagina(),
       paginaUsuarios.tamanho(), paginaUsuarios.totalElementos(), paginaUsuarios.totalPaginas()));
   }
 

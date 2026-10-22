@@ -1,7 +1,7 @@
 package com.bankapp.bankapi.domain.service;
 
 import com.bankapp.bankapi.domain.entity.Usuario;
-import com.bankapp.bankapi.domain.model.Pagina;
+import com.bankapp.bankapi.domain.model.Paginacao;
 import com.bankapp.bankapi.domain.ports.inbound.UsuarioUseCase;
 import com.bankapp.bankapi.domain.ports.outbound.UsuarioRepositoryPort;
 import com.bankapp.bankapi.infrastructure.adapters.inbound.dto.UsuarioRequestDTO;
@@ -31,7 +31,7 @@ public class UsuarioService implements UsuarioUseCase {
   }
 
   @Override
-  public Pagina<Usuario> listarUsuarios(int pagina, int tamanho) {
+  public Paginacao<Usuario> listarUsuarios(int pagina, int tamanho) {
     if (pagina < 0) {
       throw new IllegalArgumentException("A página deve ser maior ou igual a zero");
     }

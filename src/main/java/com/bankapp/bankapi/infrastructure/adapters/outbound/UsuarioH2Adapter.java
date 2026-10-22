@@ -1,7 +1,7 @@
 package com.bankapp.bankapi.infrastructure.adapters.outbound;
 
 import com.bankapp.bankapi.domain.entity.Usuario;
-import com.bankapp.bankapi.domain.model.Pagina;
+import com.bankapp.bankapi.domain.model.Paginacao;
 import com.bankapp.bankapi.domain.ports.outbound.UsuarioRepositoryPort;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
@@ -40,7 +40,7 @@ public class UsuarioH2Adapter implements UsuarioRepositoryPort {
   }
 
   @Override
-  public Pagina<Usuario> listar(int pagina, int tamanho) {
+  public Paginacao<Usuario> listar(int pagina, int tamanho) {
     var resultado = springDataUsuarioRepository.findAll(PageRequest.of(pagina, tamanho, Sort.by("id")));
     List<Usuario> usuarios = resultado.getContent().stream()
       .map(usuario -> new Usuario(
@@ -50,7 +50,7 @@ public class UsuarioH2Adapter implements UsuarioRepositoryPort {
         usuario.getSaldo()
       ))
       .toList();
-    return new Pagina<>(usuarios, resultado.getNumber(), resultado.getSize(),
+    return new Paginacao<>(usuarios, resultado.getNumber(), resultado.getSize(),
       resultado.getTotalElements(), resultado.getTotalPages());
   }
 
