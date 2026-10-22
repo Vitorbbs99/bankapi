@@ -177,6 +177,18 @@ class UsuarioServiceTest {
   }
 
   @Test
+  void realizarSaqueDeveRejeitarValorMaiorQueSaldoSemAlterarOuSalvar() {
+    Usuario usuario = usuario(1L, "Ana", "123", "50.00");
+    when(repository.buscarPorId(1L)).thenReturn(Optional.of(usuario));
+
+    assertThrows(IllegalArgumentException.class,
+      () -> service.realizarSaque(1L, new BigDecimal("50.01")));
+
+    assertEquals(new BigDecimal("50.00"), usuario.getSaldo());
+    verify(repository, never()).salvar(any());
+  }
+
+  @Test
   void realizarSaqueDeveRejeitarValorZeroOuNegativo() {
     for (BigDecimal valor : List.of(BigDecimal.ZERO, new BigDecimal("-1.00"))) {
       Usuario usuario = usuario(1L, "Ana", "123", "50.00");

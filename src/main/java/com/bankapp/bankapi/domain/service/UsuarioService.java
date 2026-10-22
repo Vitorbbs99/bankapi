@@ -82,6 +82,10 @@ public class UsuarioService implements UsuarioUseCase {
       throw new IllegalArgumentException("Valor deve ser positivo");
     }
 
+    if (valor.compareTo(usuario.getSaldo()) > 0) {
+      throw new IllegalArgumentException("Saldo insuficiente");
+    }
+
     BigDecimal subtrairSaldo = usuario.getSaldo().subtract(valor);
 
     usuario.setSaldo(subtrairSaldo);
