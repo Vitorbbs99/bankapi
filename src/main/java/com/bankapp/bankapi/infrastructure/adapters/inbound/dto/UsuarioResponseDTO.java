@@ -1,6 +1,6 @@
 package com.bankapp.bankapi.infrastructure.adapters.inbound.dto;
 
-import com.bankapp.bankapi.domain.model.Usuario;
+import com.bankapp.bankapi.domain.entity.Usuario;
 
 import java.math.BigDecimal;
 
