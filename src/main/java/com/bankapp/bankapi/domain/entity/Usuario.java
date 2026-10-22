@@ -1,4 +1,4 @@
-package com.bankapp.bankapi.domain.model;
+package com.bankapp.bankapi.domain.entity;
 
 import java.math.BigDecimal;
 

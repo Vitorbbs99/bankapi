@@ -1,14 +1,14 @@
 package com.bankapp.bankapi.infrastructure.adapters.outbound;
 
-import com.bankapp.bankapi.domain.model.Usuario;
+import com.bankapp.bankapi.domain.entity.Usuario;
+import com.bankapp.bankapi.domain.model.Pagina;
 import com.bankapp.bankapi.domain.ports.outbound.UsuarioRepositoryPort;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class UsuarioH2Adapter implements UsuarioRepositoryPort {
@@ -40,9 +40,9 @@ public class UsuarioH2Adapter implements UsuarioRepositoryPort {
   }
 
   @Override
-  public List<Usuario> listar() {
-    return springDataUsuarioRepository.findAll(Sort.by("id"))
-      .stream()
+  public Pagina<Usuario> listar(int pagina, int tamanho) {
+    var resultado = springDataUsuarioRepository.findAll(PageRequest.of(pagina, tamanho, Sort.by("id")));
+    List<Usuario> usuarios = resultado.getContent().stream()
       .map(usuario -> new Usuario(
         usuario.getId(),
         usuario.getNome(),
@@ -50,6 +50,8 @@ public class UsuarioH2Adapter implements UsuarioRepositoryPort {
         usuario.getSaldo()
       ))
       .toList();
+    return new Pagina<>(usuarios, resultado.getNumber(), resultado.getSize(),
+      resultado.getTotalElements(), resultado.getTotalPages());
   }
 
   @Override

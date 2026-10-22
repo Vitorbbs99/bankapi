@@ -1,17 +1,18 @@
 package com.bankapp.bankapi.infrastructure.controller;
 
-import com.bankapp.bankapi.domain.model.Usuario;
+import com.bankapp.bankapi.domain.entity.Usuario;
+import com.bankapp.bankapi.domain.model.Pagina;
 import com.bankapp.bankapi.domain.ports.inbound.UsuarioUseCase;
 import com.bankapp.bankapi.infrastructure.adapters.inbound.dto.DepositoRequestDTO;
 import com.bankapp.bankapi.infrastructure.adapters.inbound.dto.UsuarioRequestDTO;
 import com.bankapp.bankapi.infrastructure.adapters.inbound.dto.UsuarioResponseDTO;
 import com.bankapp.bankapi.infrastructure.adapters.outbound.UsuarioEntity;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
@@ -36,15 +37,32 @@ public class UsuarioController {
     return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioResponseDTO.doDominio(criado));
   }
 
-  @GetMapping
-  public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
-    List<Usuario> listaUsuarios = usuarioUseCase.listarUsuarios();
+  @PutMapping("/{id}")
+  public ResponseEntity<UsuarioResponseDTO> editarUsuario(
+    @PathVariable("id") Long usuarioId,
+    @RequestBody @Valid UsuarioRequestDTO usuarioRequestDTO
+  ) {
 
-    List<UsuarioResponseDTO> responseDTOS = listaUsuarios.stream()
+    Usuario usuarioParaEditar = usuarioRequestDTO.paraDominio();
+
+    Usuario usuarioAtualizado = usuarioUseCase.editarUsuario(usuarioId, usuarioParaEditar);
+
+    return ResponseEntity.ok(UsuarioResponseDTO.doDominio(usuarioAtualizado));
+  }
+
+  @GetMapping
+  public ResponseEntity<Pagina<UsuarioResponseDTO>> listarUsuarios(
+    @RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue = "20") int size
+  ) {
+    Pagina<Usuario> paginaUsuarios = usuarioUseCase.listarUsuarios(page, size);
+
+    List<UsuarioResponseDTO> responseDTOS = paginaUsuarios.conteudo().stream()
       .map(UsuarioResponseDTO::doDominio)
       .toList();
 
-    return ResponseEntity.ok(responseDTOS);
+    return ResponseEntity.ok(new Pagina<>(responseDTOS, paginaUsuarios.pagina(),
+      paginaUsuarios.tamanho(), paginaUsuarios.totalElementos(), paginaUsuarios.totalPaginas()));
   }
 
   @GetMapping("/{id}")
