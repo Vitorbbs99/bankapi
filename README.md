@@ -84,4 +84,19 @@ API para simular saque/depósito de um usuário.
 ## Melhorias
 
 * **Cache Redis**: Nos usuários para reduzir latência em leitura pesada.
-* **Autenticação/autorização na API**: Proteger endpoints em produção.
+## Segurança da API
+
+Todos os endpoints da API exigem o cabeçalho `Authorization: Bearer <token>`. Configure `API_TOKEN` no ambiente antes de iniciar a aplicação. O serviço não inicia se o token não estiver configurado.
+
+Exemplo no PowerShell:
+```powershell
+$env:API_TOKEN = "troque-por-um-token-seguro"
+./mvnw spring-boot:run
+```
+
+Exemplo de chamada:
+```bash
+curl -H "Authorization: Bearer troque-por-um-token-seguro" http://localhost:8080/api/v1/usuarios
+```
+
+Sem token válido, a API retorna `401 Unauthorized`. Swagger e console H2 ficam públicos para uso local.
