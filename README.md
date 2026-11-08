@@ -58,11 +58,13 @@ API para simular saque/depósito de um usuário.
 3. Renomei o arquivo
     ```
     ".env.example" para ".env"
+    ```
+   e preencha `API_TOKEN` com um token seguro (ex.: `openssl rand -hex 32`). A aplicação não inicia com o token vazio.
 4. Rode no console:
     ```
    docker-compose up -d --build
     ```
-   O `docker-compose.yml` sobe dois serviços: `mongodb` (imagem `mongo:7`, porta `27017`, dados persistidos no volume `mongodb_data`) e `bankapi` (porta `8080`, conectada via `MONGODB_URI=mongodb://mongodb:27017/bankapi`).
+   O `docker-compose.yml` sobe dois serviços: `mongodb` (imagem `mongo:7`, porta `27017` publicada apenas em `127.0.0.1`, dados persistidos no volume `mongodb_data`) e `bankapi` (porta `8080`, conectada via `MONGODB_URI=mongodb://mongodb:27017/bankapi`).
 
 ## Links
 * O projeto irá rodar em: http://localhost:8080
