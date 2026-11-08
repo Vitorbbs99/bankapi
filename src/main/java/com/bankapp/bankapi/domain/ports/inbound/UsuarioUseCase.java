@@ -2,17 +2,15 @@ package com.bankapp.bankapi.domain.ports.inbound;
 
 import com.bankapp.bankapi.domain.entity.Usuario;
 import com.bankapp.bankapi.domain.model.Paginacao;
-import com.bankapp.bankapi.infrastructure.adapters.inbound.dto.UsuarioRequestDTO;
-import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 
 public interface UsuarioUseCase {
   Usuario criarUsuario(Usuario usuario);
-  void removerUsuario(Long id);
+  void removerUsuario(String id);
   Paginacao<Usuario> listarUsuarios(int pagina, int tamanho);
-  Usuario listaUsuario(Long id);
-  Usuario editarUsuario(Long usuarioId, Usuario usuario);
-  Usuario realizarDeposito(Long usuarioId, BigDecimal valor);
-  Usuario realizarSaque(Long usuarioId, BigDecimal valor);
+  Usuario listaUsuario(String id);
+  Usuario editarUsuario(String usuarioId, Usuario usuario);
+  Usuario realizarDeposito(String usuarioId, BigDecimal valor);
+  Usuario realizarSaque(String usuarioId, BigDecimal valor);
 }

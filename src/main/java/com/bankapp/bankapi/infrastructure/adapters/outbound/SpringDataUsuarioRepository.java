@@ -1,6 +1,6 @@
 package com.bankapp.bankapi.infrastructure.adapters.outbound;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface SpringDataUsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
+public interface SpringDataUsuarioRepository extends MongoRepository<UsuarioEntity, String> {
 }

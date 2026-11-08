@@ -27,13 +27,12 @@ public class SecurityConfiguration {
       .csrf(csrf -> csrf.disable())
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/h2-console/**").permitAll()
+        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
         .anyRequest().authenticated())
       .exceptionHandling(exceptions -> exceptions
         .authenticationEntryPoint((request, response, exception) ->
           response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-      .addFilterBefore(new ApiTokenFilter(expectedToken), UsernamePasswordAuthenticationFilter.class)
-      .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+      .addFilterBefore(new ApiTokenFilter(expectedToken), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

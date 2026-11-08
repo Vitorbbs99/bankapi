@@ -26,7 +26,7 @@ class UsuarioServiceTest {
 
   @Test
   void criarUsuarioDeveDelegarSalvamentoAoRepositorio() {
-    Usuario usuario = usuario(1L, "Ana", "123", "50.00");
+    Usuario usuario = usuario("1", "Ana", "123", "50.00");
     when(repository.salvar(usuario)).thenReturn(usuario);
 
     Usuario resultado = service.criarUsuario(usuario);
@@ -37,20 +37,20 @@ class UsuarioServiceTest {
 
   @Test
   void removerUsuarioDeveRemoverUsuarioEncontrado() {
-    when(repository.buscarPorId(1L)).thenReturn(Optional.of(usuario(1L, "Ana", "123", "50.00")));
+    when(repository.buscarPorId("1")).thenReturn(Optional.of(usuario("1", "Ana", "123", "50.00")));
 
-    service.removerUsuario(1L);
+    service.removerUsuario("1");
 
-    verify(repository).remover(1L);
+    verify(repository).remover("1");
   }
 
   @Test
   void removerUsuarioDeveFalharQuandoUsuarioNaoExiste() {
-    when(repository.buscarPorId(1L)).thenReturn(Optional.empty());
+    when(repository.buscarPorId("1")).thenReturn(Optional.empty());
 
-    assertThrows(RuntimeException.class, () -> service.removerUsuario(1L));
+    assertThrows(RuntimeException.class, () -> service.removerUsuario("1"));
 
-    verify(repository, never()).remover(anyLong());
+    verify(repository, never()).remover(anyString());
   }
 
   @Test
@@ -90,53 +90,53 @@ class UsuarioServiceTest {
 
   @Test
   void listaUsuarioDeveRetornarUsuarioEncontrado() {
-    Usuario usuario = usuario(1L, "Ana", "123", "50.00");
-    when(repository.buscarPorId(1L)).thenReturn(Optional.of(usuario));
+    Usuario usuario = usuario("1", "Ana", "123", "50.00");
+    when(repository.buscarPorId("1")).thenReturn(Optional.of(usuario));
 
-    assertSame(usuario, service.listaUsuario(1L));
+    assertSame(usuario, service.listaUsuario("1"));
   }
 
   @Test
   void listaUsuarioDeveFalharQuandoUsuarioNaoExiste() {
-    when(repository.buscarPorId(1L)).thenReturn(Optional.empty());
+    when(repository.buscarPorId("1")).thenReturn(Optional.empty());
 
-    assertThrows(RuntimeException.class, () -> service.listaUsuario(1L));
+    assertThrows(RuntimeException.class, () -> service.listaUsuario("1"));
   }
 
   @Test
   void editarUsuarioDeveAtualizarNomeECpfPreservandoIdESaldo() {
-    Usuario atual = usuario(1L, "Ana", "123", "50.00");
-    Usuario alteracoes = usuario(99L, "Ana Souza", "456", "999.00");
-    when(repository.buscarPorId(1L)).thenReturn(Optional.of(atual));
+    Usuario atual = usuario("1", "Ana", "123", "50.00");
+    Usuario alteracoes = usuario("99", "Ana Souza", "456", "999.00");
+    when(repository.buscarPorId("1")).thenReturn(Optional.of(atual));
     when(repository.salvar(atual)).thenReturn(atual);
 
-    Usuario resultado = service.editarUsuario(1L, alteracoes);
+    Usuario resultado = service.editarUsuario("1", alteracoes);
 
     assertSame(atual, resultado);
     assertEquals("Ana Souza", atual.getNome());
     assertEquals("456", atual.getCpf());
-    assertEquals(1L, atual.getId());
+    assertEquals("1", atual.getId());
     assertEquals(new BigDecimal("50.00"), atual.getSaldo());
     verify(repository).salvar(atual);
   }
 
   @Test
   void editarUsuarioDeveFalharQuandoUsuarioNaoExiste() {
-    when(repository.buscarPorId(1L)).thenReturn(Optional.empty());
+    when(repository.buscarPorId("1")).thenReturn(Optional.empty());
 
     assertThrows(RuntimeException.class,
-      () -> service.editarUsuario(1L, usuario(1L, "Ana", "123", "0.00")));
+      () -> service.editarUsuario("1", usuario("1", "Ana", "123", "0.00")));
 
     verify(repository, never()).salvar(any());
   }
 
   @Test
   void realizarDepositoDeveSomarValorAoSaldoESalvar() {
-    Usuario usuario = usuario(1L, "Ana", "123", "50.00");
-    when(repository.buscarPorId(1L)).thenReturn(Optional.of(usuario));
+    Usuario usuario = usuario("1", "Ana", "123", "50.00");
+    when(repository.buscarPorId("1")).thenReturn(Optional.of(usuario));
     when(repository.salvar(usuario)).thenReturn(usuario);
 
-    Usuario resultado = service.realizarDeposito(1L, new BigDecimal("25.50"));
+    Usuario resultado = service.realizarDeposito("1", new BigDecimal("25.50"));
 
     assertSame(usuario, resultado);
     assertEquals(new BigDecimal("75.50"), usuario.getSaldo());
@@ -146,10 +146,10 @@ class UsuarioServiceTest {
   @Test
   void realizarDepositoDeveRejeitarValorZeroOuNegativo() {
     for (BigDecimal valor : List.of(BigDecimal.ZERO, new BigDecimal("-1.00"))) {
-      Usuario usuario = usuario(1L, "Ana", "123", "50.00");
-      when(repository.buscarPorId(1L)).thenReturn(Optional.of(usuario));
+      Usuario usuario = usuario("1", "Ana", "123", "50.00");
+      when(repository.buscarPorId("1")).thenReturn(Optional.of(usuario));
 
-      assertThrows(IllegalArgumentException.class, () -> service.realizarDeposito(1L, valor));
+      assertThrows(IllegalArgumentException.class, () -> service.realizarDeposito("1", valor));
       assertEquals(new BigDecimal("50.00"), usuario.getSaldo());
       verify(repository, never()).salvar(any());
     }
@@ -157,19 +157,19 @@ class UsuarioServiceTest {
 
   @Test
   void realizarDepositoDeveFalharQuandoUsuarioNaoExiste() {
-    when(repository.buscarPorId(1L)).thenReturn(Optional.empty());
+    when(repository.buscarPorId("1")).thenReturn(Optional.empty());
 
     assertThrows(RuntimeException.class,
-      () -> service.realizarDeposito(1L, new BigDecimal("10.00")));
+      () -> service.realizarDeposito("1", new BigDecimal("10.00")));
   }
 
   @Test
   void realizarSaqueDeveSubtrairValorDoSaldoESalvar() {
-    Usuario usuario = usuario(1L, "Ana", "123", "50.00");
-    when(repository.buscarPorId(1L)).thenReturn(Optional.of(usuario));
+    Usuario usuario = usuario("1", "Ana", "123", "50.00");
+    when(repository.buscarPorId("1")).thenReturn(Optional.of(usuario));
     when(repository.salvar(usuario)).thenReturn(usuario);
 
-    Usuario resultado = service.realizarSaque(1L, new BigDecimal("20.00"));
+    Usuario resultado = service.realizarSaque("1", new BigDecimal("20.00"));
 
     assertSame(usuario, resultado);
     assertEquals(new BigDecimal("30.00"), usuario.getSaldo());
@@ -178,11 +178,11 @@ class UsuarioServiceTest {
 
   @Test
   void realizarSaqueDeveRejeitarValorMaiorQueSaldoSemAlterarOuSalvar() {
-    Usuario usuario = usuario(1L, "Ana", "123", "50.00");
-    when(repository.buscarPorId(1L)).thenReturn(Optional.of(usuario));
+    Usuario usuario = usuario("1", "Ana", "123", "50.00");
+    when(repository.buscarPorId("1")).thenReturn(Optional.of(usuario));
 
     assertThrows(IllegalArgumentException.class,
-      () -> service.realizarSaque(1L, new BigDecimal("50.01")));
+      () -> service.realizarSaque("1", new BigDecimal("50.01")));
 
     assertEquals(new BigDecimal("50.00"), usuario.getSaldo());
     verify(repository, never()).salvar(any());
@@ -191,10 +191,10 @@ class UsuarioServiceTest {
   @Test
   void realizarSaqueDeveRejeitarValorZeroOuNegativo() {
     for (BigDecimal valor : List.of(BigDecimal.ZERO, new BigDecimal("-1.00"))) {
-      Usuario usuario = usuario(1L, "Ana", "123", "50.00");
-      when(repository.buscarPorId(1L)).thenReturn(Optional.of(usuario));
+      Usuario usuario = usuario("1", "Ana", "123", "50.00");
+      when(repository.buscarPorId("1")).thenReturn(Optional.of(usuario));
 
-      assertThrows(IllegalArgumentException.class, () -> service.realizarSaque(1L, valor));
+      assertThrows(IllegalArgumentException.class, () -> service.realizarSaque("1", valor));
       assertEquals(new BigDecimal("50.00"), usuario.getSaldo());
       verify(repository, never()).salvar(any());
     }
@@ -202,13 +202,13 @@ class UsuarioServiceTest {
 
   @Test
   void realizarSaqueDeveFalharQuandoUsuarioNaoExiste() {
-    when(repository.buscarPorId(1L)).thenReturn(Optional.empty());
+    when(repository.buscarPorId("1")).thenReturn(Optional.empty());
 
     assertThrows(RuntimeException.class,
-      () -> service.realizarSaque(1L, new BigDecimal("10.00")));
+      () -> service.realizarSaque("1", new BigDecimal("10.00")));
   }
 
-  private Usuario usuario(Long id, String nome, String cpf, String saldo) {
+  private Usuario usuario(String id, String nome, String cpf, String saldo) {
     return new Usuario(id, nome, cpf, new BigDecimal(saldo));
   }
 }

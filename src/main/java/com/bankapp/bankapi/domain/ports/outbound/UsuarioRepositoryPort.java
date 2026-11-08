@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UsuarioRepositoryPort {
   Usuario salvar(Usuario usuario);
-  void remover(Long id);
+  void remover(String id);
   Paginacao<Usuario> listar(int pagina, int tamanho);
-  Optional<Usuario> buscarPorId(Long id);
+  Optional<Usuario> buscarPorId(String id);
 }

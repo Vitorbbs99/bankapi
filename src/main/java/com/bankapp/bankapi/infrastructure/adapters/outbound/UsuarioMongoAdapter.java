@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class UsuarioH2Adapter implements UsuarioRepositoryPort {
+public class UsuarioMongoAdapter implements UsuarioRepositoryPort {
 
   private final SpringDataUsuarioRepository springDataUsuarioRepository;
 
-  public UsuarioH2Adapter(SpringDataUsuarioRepository springDataUsuarioRepository) {
+  public UsuarioMongoAdapter(SpringDataUsuarioRepository springDataUsuarioRepository) {
     this.springDataUsuarioRepository = springDataUsuarioRepository;
   }
 
@@ -32,7 +32,7 @@ public class UsuarioH2Adapter implements UsuarioRepositoryPort {
   }
 
   @Override
-  public void remover(Long usuarioId) {
+  public void remover(String usuarioId) {
     UsuarioEntity removerUsuario = springDataUsuarioRepository.findById(usuarioId)
         .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     springDataUsuarioRepository.delete(removerUsuario);
@@ -55,7 +55,7 @@ public class UsuarioH2Adapter implements UsuarioRepositoryPort {
   }
 
   @Override
-  public Optional<Usuario> buscarPorId(Long usuarioId) {
+  public Optional<Usuario> buscarPorId(String usuarioId) {
     return springDataUsuarioRepository.findById(usuarioId)
       .map(e -> new Usuario(e.getId(), e.getNome(), e.getCpf(), e.getSaldo()));
   }
