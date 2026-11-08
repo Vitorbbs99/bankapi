@@ -16,8 +16,8 @@ API para simular saque/depósito de um usuário.
 
 ## Modelo de Dados e Persistência
 
-* **H2:**   banco de dados relacional leve e integrado que roda diretamente na memória RAM.
-* **Interface Visual Local:** H2 Console.
+* **MongoDB:** banco de dados NoSQL orientado a documentos (coleção `usuario_bank`, IDs gerados pelo Mongo como `ObjectId`).
+* **Conexão:** configurada pela variável de ambiente `MONGODB_URI` (padrão: `mongodb://localhost:27017/bankapi`).
 
 ---
 
@@ -34,7 +34,7 @@ API para simular saque/depósito de um usuário.
 * **O (Open/Closed):** O ecossistema está aberto para extensão e fechada para modificação.
 * **L (Liskov Substitution):** Classes filhas se comportam como a classe pai.
 * **I (Interface Segregation):** Interfaces de domínio enxutas.
-* **D (Dependency Inversion):** interface que serve ao seu modelo de domínio (JPA).
+* **D (Dependency Inversion):** interface que serve ao seu modelo de domínio (Spring Data MongoDB).
 
 ### Design Patterns
 * **Singleton:** Escopo padrão dos Beans gerenciados pelo Spring Framework (Services, Repositories).
@@ -46,6 +46,7 @@ API para simular saque/depósito de um usuário.
 ### Pré-requisitos
 * Git
 * Docker e Docker Compose instalados
+* Para rodar fora do Docker Compose: uma instância MongoDB acessível, apontada por `MONGODB_URI`
 
 ### Passo a Passo
 1. Clone o repositório:
@@ -57,9 +58,13 @@ API para simular saque/depósito de um usuário.
 3. Renomei o arquivo
     ```
     ".env.example" para ".env"
+    ```
+   e preencha `API_TOKEN` com um token seguro (ex.: `openssl rand -hex 32`). A aplicação não inicia com o token vazio.
 4. Rode no console:
     ```
    docker-compose up -d --build
+    ```
+   O `docker-compose.yml` sobe dois serviços: `mongodb` (imagem `mongo:7`, porta `27017` publicada apenas em `127.0.0.1`, dados persistidos no volume `mongodb_data`) e `bankapi` (porta `8080`, conectada via `MONGODB_URI=mongodb://mongodb:27017/bankapi`).
 
 ## Links
 * O projeto irá rodar em: http://localhost:8080
@@ -74,7 +79,7 @@ API para simular saque/depósito de um usuário.
 ```json
 [
   {
-    "id": 1,
+    "id": "6650f1c2a1b2c3d4e5f60718",
     "nome": "Nome",
     "cpf": "339.948.940-42",
     "saldo": 1000.00
@@ -91,6 +96,7 @@ Todos os endpoints da API exigem o cabeçalho `Authorization: Bearer <token>`. C
 Exemplo no PowerShell:
 ```powershell
 $env:API_TOKEN = "troque-por-um-token-seguro"
+$env:MONGODB_URI = "mongodb://localhost:27017/bankapi"
 ./mvnw spring-boot:run
 ```
 
@@ -99,4 +105,4 @@ Exemplo de chamada:
 curl -H "Authorization: Bearer troque-por-um-token-seguro" http://localhost:8080/api/v1/usuarios
 ```
 
-Sem token válido, a API retorna `401 Unauthorized`. Swagger e console H2 ficam públicos para uso local.
+Sem token válido, a API retorna `401 Unauthorized`. O Swagger fica público para uso local.

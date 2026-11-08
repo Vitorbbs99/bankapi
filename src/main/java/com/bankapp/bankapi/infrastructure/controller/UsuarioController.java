@@ -39,7 +39,7 @@ public class UsuarioController {
 
   @PutMapping("/{id}")
   public ResponseEntity<UsuarioResponseDTO> editarUsuario(
-    @PathVariable("id") Long usuarioId,
+    @PathVariable("id") String usuarioId,
     @RequestBody @Valid UsuarioRequestDTO usuarioRequestDTO
   ) {
 
@@ -66,20 +66,20 @@ public class UsuarioController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<UsuarioResponseDTO> listaUsuario(@PathVariable("id") Long usuarioId) {
+  public ResponseEntity<UsuarioResponseDTO> listaUsuario(@PathVariable("id") String usuarioId) {
     Usuario usuario = usuarioUseCase.listaUsuario(usuarioId);
     return ResponseEntity.ok(UsuarioResponseDTO.doDominio(usuario));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> removerUsuario(@PathVariable Long id) {
+  public ResponseEntity<Void> removerUsuario(@PathVariable String id) {
     usuarioUseCase.removerUsuario(id);
     return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/{id}/deposito")
   public ResponseEntity<UsuarioResponseDTO> depositar (
-    @PathVariable Long id,
+    @PathVariable String id,
     @RequestBody DepositoRequestDTO dto
     ) {
       Usuario usuario = usuarioUseCase.realizarDeposito(id, dto.valor());
@@ -88,7 +88,7 @@ public class UsuarioController {
 
   @PostMapping("/{id}/saque")
   public ResponseEntity<UsuarioResponseDTO> sacar (
-    @PathVariable Long id,
+    @PathVariable String id,
     @RequestBody DepositoRequestDTO dto
   ) {
     Usuario usuario = usuarioUseCase.realizarSaque(id, dto.valor());

@@ -4,8 +4,6 @@ import com.bankapp.bankapi.domain.entity.Usuario;
 import com.bankapp.bankapi.domain.model.Paginacao;
 import com.bankapp.bankapi.domain.ports.inbound.UsuarioUseCase;
 import com.bankapp.bankapi.domain.ports.outbound.UsuarioRepositoryPort;
-import com.bankapp.bankapi.infrastructure.adapters.inbound.dto.UsuarioRequestDTO;
-import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 
@@ -23,7 +21,7 @@ public class UsuarioService implements UsuarioUseCase {
   }
 
   @Override
-  public void removerUsuario(Long usuarioId) {
+  public void removerUsuario(String usuarioId) {
     Usuario usuario = usuarioRepositoryPort.buscarPorId(usuarioId)
       .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -42,13 +40,13 @@ public class UsuarioService implements UsuarioUseCase {
   }
 
   @Override
-  public Usuario listaUsuario(Long usuarioId) {
+  public Usuario listaUsuario(String usuarioId) {
     return usuarioRepositoryPort.buscarPorId(usuarioId)
       .orElseThrow(() -> new RuntimeException("Usuário não encontrado" + usuarioId));
   }
 
   @Override
-  public Usuario editarUsuario(Long usuarioId, Usuario usuario) {
+  public Usuario editarUsuario(String usuarioId, Usuario usuario) {
     Usuario usuarioAtual = usuarioRepositoryPort.buscarPorId(usuarioId)
       .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
@@ -59,7 +57,7 @@ public class UsuarioService implements UsuarioUseCase {
   }
 
   @Override
-  public Usuario realizarDeposito(Long usuarioId, BigDecimal valor) {
+  public Usuario realizarDeposito(String usuarioId, BigDecimal valor) {
     Usuario usuario = usuarioRepositoryPort.buscarPorId(usuarioId)
       .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -74,7 +72,7 @@ public class UsuarioService implements UsuarioUseCase {
   }
 
   @Override
-  public Usuario realizarSaque(Long id, BigDecimal valor) {
+  public Usuario realizarSaque(String id, BigDecimal valor) {
     Usuario usuario = usuarioRepositoryPort.buscarPorId(id)
       .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 

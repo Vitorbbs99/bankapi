@@ -3,16 +3,8 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: bankapi
-  datasource:
-    url: jdbc:h2:mem:mydb
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
-    jpa:
-      database-platform: org.hibernate.dialect.H2Dialect
-  h2:
-    console:
-      enabled: true
+  mongodb:
+    uri: ${MONGODB_URI:mongodb://localhost:27017/bankapi}
 api:
   security:
     token: ${API_TOKEN}

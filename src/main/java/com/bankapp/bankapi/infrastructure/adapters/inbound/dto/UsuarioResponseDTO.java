@@ -5,7 +5,7 @@ import com.bankapp.bankapi.domain.entity.Usuario;
 import java.math.BigDecimal;
 
 public record UsuarioResponseDTO (
-  Long id,
+  String id,
   String nome,
   String cpf,
   BigDecimal saldo
