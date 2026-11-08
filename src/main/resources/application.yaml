@@ -3,9 +3,8 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: bankapi
-  data:
-    mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/bankapi}
+  mongodb:
+    uri: ${MONGODB_URI:mongodb://localhost:27017/bankapi}
 api:
   security:
     token: ${API_TOKEN}

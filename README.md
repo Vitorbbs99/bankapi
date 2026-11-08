@@ -46,7 +46,7 @@ API para simular saque/depósito de um usuário.
 ### Pré-requisitos
 * Git
 * Docker e Docker Compose instalados
-* Uma instância MongoDB acessível (ex.: `docker run -d -p 27017:27017 mongo:7`), apontada por `MONGODB_URI`
+* Para rodar fora do Docker Compose: uma instância MongoDB acessível, apontada por `MONGODB_URI`
 
 ### Passo a Passo
 1. Clone o repositório:
@@ -61,6 +61,8 @@ API para simular saque/depósito de um usuário.
 4. Rode no console:
     ```
    docker-compose up -d --build
+    ```
+   O `docker-compose.yml` sobe dois serviços: `mongodb` (imagem `mongo:7`, porta `27017`, dados persistidos no volume `mongodb_data`) e `bankapi` (porta `8080`, conectada via `MONGODB_URI=mongodb://mongodb:27017/bankapi`).
 
 ## Links
 * O projeto irá rodar em: http://localhost:8080
